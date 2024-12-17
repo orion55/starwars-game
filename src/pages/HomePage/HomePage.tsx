@@ -13,7 +13,7 @@ export const HomePage = () => {
       height='100vh'
       backgroundImage={`url(${backgroundImage})`}
       backgroundSize='cover'
-      backgroundPosition='center'
+      backgroundPosition='right'
     >
       <Flex
         justifyContent='center'
@@ -44,23 +44,26 @@ export const HomePage = () => {
             галактике!
           </Text>
         </Box>
-        <Button
-          size='xl'
-          backgroundColor='yellow.500'
-          color='white'
-          transition='transform 0.3s ease, background-color 0.3s ease'
-          _hover={{
-            bg: 'yellow.400',
-            cursor: 'pointer',
-            transform: 'scale(1.1)',
-          }}
-          _active={{
-            transform: 'scale(1)',
-          }}
-          onClick={() => navigate(RoutePaths.Character)}
-        >
-          Создать персонажа
-        </Button>
+        <Box width='100%'>
+          <Button
+            size='xl'
+            backgroundColor='yellow.500'
+            color='white'
+            transition='transform 0.3s ease, background-color 0.3s ease'
+            _hover={{
+              bg: 'yellow.400',
+              cursor: 'pointer',
+              transform: 'scale(1.05)',
+            }}
+            _active={{
+              transform: 'scale(1)',
+            }}
+            onClick={() => navigate(RoutePaths.Character)}
+            width='100%'
+          >
+            Создать персонажа
+          </Button>
+        </Box>
       </Flex>
     </Box>
   );
