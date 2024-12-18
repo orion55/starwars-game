@@ -30,8 +30,8 @@ export const CharacterBuilder = () => {
   const [planetsInfo, starshipsInfo, speciesInfo] = results;
 
   const isLoading = results.some((result) => result.isLoading);
-  const isError = results.some((result) => result.isError);
-  const errorsData = results.filter((result) => result.isError).map((result) => result.error);
+  // const isError = results.some((result) => result.isError);
+  // const errorsData = results.filter((result) => result.isError).map((result) => result.error);
 
   const planets = useMemo(
     () =>
