@@ -1,9 +1,10 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import backgroundImage from './assets/img01.jpg';
 import { RoutePaths } from '@/app/routes.tsx';
 import { Button } from '@/shared/ui/button.tsx';
 import { useNavigate } from 'react-router';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
+import { CharacterBuilder } from '@/widgets/CharacterBuilder';
 
 export const Character = () => {
   const navigate = useNavigate();
@@ -14,8 +15,12 @@ export const Character = () => {
       backgroundSize='cover'
       backgroundPosition='right'
       padding='10px'
+      display='flex'
+      justifyContent='flex-start'
+      alignItems='center'
+      flexDirection='column'
     >
-      <Box width='100%' display='flex' justifyContent='flex-start' alignItems='center'>
+      <Flex width='100%' justifyContent='flex-start' alignItems='center'>
         <Button
           size='md'
           backgroundColor='yellow.500'
@@ -24,13 +29,21 @@ export const Character = () => {
           _hover={{
             bg: 'yellow.400',
             cursor: 'pointer',
+            transform: 'scale(1.05)',
+            transition: 'transform 0.4s ease',
+          }}
+          _active={{
+            transform: 'scale(1)',
           }}
           onClick={() => navigate(RoutePaths.Home)}
         >
           <MdOutlineArrowBackIos />
           Назад
         </Button>
-      </Box>
+      </Flex>
+      <Flex width='100%' justifyContent='center' alignItems='center' flex='1 0 auto'>
+        <CharacterBuilder />
+      </Flex>
     </Box>
   );
 };
