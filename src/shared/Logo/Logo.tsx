@@ -11,6 +11,7 @@ export const Logo = () => {
       _hover={{
         transform: 'rotate(10deg) scale(1.1)', // Поворот и увеличение
       }}
+      zIndex='1'
     >
       <Image
         src={logo}

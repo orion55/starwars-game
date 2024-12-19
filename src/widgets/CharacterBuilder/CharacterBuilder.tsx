@@ -1,6 +1,4 @@
 import { Button } from '@/shared/ui/button.tsx';
-// import { useStarWarsData } from '@/widgets/CharacterBuilder/hooks/useStarWarsData.ts';
-import { z } from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { Box, Input, Spinner, Stack, Text, VStack } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,38 +13,56 @@ import {
 import { useStarWarsData } from '@/widgets/CharacterBuilder/hooks/useStarWarsData.ts';
 import { ErrorBox } from './ui/ErrorBox';
 import { AxiosError } from 'axios';
-
-const formSchema = z.object({
-  name: z
-    .string()
-    .nonempty('Имя пользователя обязательно для заполнения')
-    .regex(/^[a-zA-Zа-яА-ЯёЁ\s]+$/, 'Имя пользователя должно содержать только буквы и пробелы')
-    .min(3, 'Имя пользователя должно содержать не менее 3 символов')
-    .max(20, 'Имя пользователя должно содержать не более 20 символов'),
-  // planet: z.string().array().nonempty("Поле 'Планета' обязателен для выбора"),
-  planet: z.string().array().nonempty({
-    message: "Can't be empty!",
-  }),
-  starship: z.string({ message: 'Поле "Космический корабль" обязательно для заполнения' }).array(),
-  specie: z.string({ message: 'Поле "Вид" обязательно для заполнения' }).array(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+import { formSchema, FormValues } from './model/schema.ts';
+import { Character, useCharactersStore } from '@/shared/stores/useCharacterStore.ts';
+import { v4 as uuidv4 } from 'uuid';
+import head from 'lodash/head';
+import { toaster } from '@/shared/ui/toaster.tsx';
+import { RoutePaths } from '@/app/routes.tsx';
+import { useNavigate } from 'react-router';
 
 export const CharacterBuilder = () => {
-  // const { characters, setCharacter } = useCharactersStore();
+  const { setCharacter } = useCharactersStore();
   const { isLoading, isError, errorsData, planets, starships, species } = useStarWarsData();
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     control,
+    reset,
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      planet: [],
+      starship: [],
+      specie: [],
+    },
   });
 
-  const onSubmit = handleSubmit((data) => console.log(data));
+  const onSubmit = handleSubmit((data) => {
+    const { name, planet, starship, specie } = data;
+
+    setCharacter({
+      id: uuidv4(),
+      name,
+      planet: head(planet),
+      starship: head(starship),
+      specie: head(specie),
+    } as Character);
+
+    toaster.create({
+      description: 'Персонаж успешно создан!',
+      type: 'success',
+    });
+
+    setTimeout(() => {
+      reset();
+      navigate(RoutePaths.Home);
+    }, 750);
+  });
 
   if (isLoading) {
     return (
@@ -57,12 +73,10 @@ export const CharacterBuilder = () => {
     );
   }
 
-  if (isError) {
-    return <ErrorBox errors={errorsData as AxiosError[]} />;
-  }
-  console.log({ errors });
+  if (isError) return <ErrorBox errors={errorsData as AxiosError[]} />;
+
   return (
-    <Box width='320px'>
+    <Box width='400px'>
       <form onSubmit={onSubmit}>
         <Stack gap='4' align='flex-start'>
           <Field
@@ -98,12 +112,18 @@ export const CharacterBuilder = () => {
                   variant='subtle'
                   size='md'
                 >
-                  <SelectTrigger>
+                  <SelectTrigger clearable>
                     <SelectValueText placeholder='Выберите планету' />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent backgroundColor='gray.900'>
                     {planets.items.map((planet) => (
-                      <SelectItem item={planet} key={planet} color='yellow.500'>
+                      <SelectItem
+                        item={planet}
+                        key={planet}
+                        color='yellow.500'
+                        backgroundColor='gray.900'
+                        cursor='pointer'
+                      >
                         {planet}
                       </SelectItem>
                     ))}
@@ -133,12 +153,18 @@ export const CharacterBuilder = () => {
                   variant='subtle'
                   size='md'
                 >
-                  <SelectTrigger>
+                  <SelectTrigger clearable>
                     <SelectValueText placeholder='Выберите звездолёт' />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent backgroundColor='gray.900'>
                     {starships.items.map((starship) => (
-                      <SelectItem item={starship} key={starship} color='yellow.500'>
+                      <SelectItem
+                        item={starship}
+                        key={starship}
+                        color='yellow.500'
+                        backgroundColor='gray.900'
+                        cursor='pointer'
+                      >
                         {starship}
                       </SelectItem>
                     ))}
@@ -149,7 +175,7 @@ export const CharacterBuilder = () => {
           </Field>
 
           <Field
-            label='Вид'
+            label='Раса'
             invalid={!!errors.specie}
             errorText={errors.specie?.message}
             width='100%'
@@ -168,12 +194,18 @@ export const CharacterBuilder = () => {
                   variant='subtle'
                   size='md'
                 >
-                  <SelectTrigger>
-                    <SelectValueText placeholder='Выберите вид' />
+                  <SelectTrigger clearable>
+                    <SelectValueText placeholder='Выберите расу' />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent backgroundColor='gray.900'>
                     {species.items.map((specie) => (
-                      <SelectItem item={specie} key={specie} color='yellow.500'>
+                      <SelectItem
+                        item={specie}
+                        key={specie}
+                        color='yellow.500'
+                        backgroundColor='gray.900'
+                        cursor='pointer'
+                      >
                         {specie}
                       </SelectItem>
                     ))}
@@ -182,8 +214,7 @@ export const CharacterBuilder = () => {
               )}
             />
           </Field>
-
-          <Button color='white' backgroundColor='yellow.500' type='submit' width='100%'>
+          <Button color='white' backgroundColor='yellow.500' type='submit' width='100%' mt={2}>
             Создать персонажа
           </Button>
         </Stack>
