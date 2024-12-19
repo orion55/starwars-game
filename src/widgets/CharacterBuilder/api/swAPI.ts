@@ -36,16 +36,25 @@ function getSortedItems(items: Item[]): string[] {
 }
 
 async function fetchAllPages(endpoint: string): Promise<Item[]> {
-  let allItems: Item[] = [];
-  let nextPage: string | null = endpoint;
+  const { data: firstPageData } = await apiClient.get(endpoint);
+  const firstPage = apiResponseSchema.parse(firstPageData);
 
-  while (nextPage) {
-    const { data } = await apiClient.get(nextPage);
-    const parsedData = apiResponseSchema.parse(data);
+  let allItems = [...firstPage.results];
 
-    allItems = [...allItems, ...parsedData.results];
-    nextPage = parsedData.next;
-  }
+  const remainingPageNumbers = Array.from(
+    { length: firstPage.total_pages - 1 },
+    (_, index) => index + 2,
+  );
+
+  const remainingPageRequests = remainingPageNumbers.map((page) =>
+    apiClient
+      .get(`${endpoint}?page=${page}&limit=10`)
+      .then((response) => apiResponseSchema.parse(response.data).results),
+  );
+
+  const remainingPages = await Promise.all(remainingPageRequests);
+
+  allItems = allItems.concat(...remainingPages);
 
   return allItems;
 }
