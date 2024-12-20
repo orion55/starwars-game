@@ -20,6 +20,7 @@ import head from 'lodash/head';
 import { toaster } from '@/shared/ui/toaster.tsx';
 import { RoutePaths } from '@/app/routes.tsx';
 import { useNavigate } from 'react-router';
+import { motion } from 'framer-motion';
 
 const customScrollbar = {
   '&::-webkit-scrollbar': {
@@ -33,6 +34,8 @@ const customScrollbar = {
     borderRadius: '2px',
   },
 };
+
+const MButton = motion.create(Button);
 
 export const CharacterBuilder = () => {
   const { setCharacter } = useCharactersStore();
@@ -233,9 +236,26 @@ export const CharacterBuilder = () => {
               )}
             />
           </Field>
-          <Button color='white' backgroundColor='yellow.500' type='submit' width='100%' mt={2}>
+          <MButton
+            type='submit'
+            width='100%'
+            mt={2}
+            backgroundColor='#eab308'
+            color='white'
+            whileHover={{
+              scale: 1.05,
+              backgroundColor: '#facc15',
+              transition: {
+                scale: { duration: 0.3 },
+                backgroundColor: { duration: 0.3 },
+              },
+            }}
+            whileTap={{
+              scale: 1,
+            }}
+          >
             Создать персонажа
-          </Button>
+          </MButton>
         </Stack>
       </form>
     </Box>

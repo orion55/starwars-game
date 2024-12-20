@@ -1,28 +1,40 @@
 import logo from './logo.png';
 import { Box, Image } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
+
+const MBox = motion.create(Box);
+const MImage = motion.create(Image);
 
 export const Logo = () => {
   return (
-    <Box
-      display='inline-block'
+    <MBox
       p={3}
       rounded='full'
-      transition='transform 0.4s ease'
-      _hover={{
-        transform: 'rotate(10deg) scale(1.1)', // Поворот и увеличение
+      whileHover={{
+        rotate: 10,
+        scale: 1.1,
+      }}
+      transition={{
+        type: 'spring',
+        stiffness: 300,
+        damping: 30,
       }}
       zIndex='1'
     >
-      <Image
+      <MImage
         src={logo}
         alt='logo'
         height='137px'
         width='320px'
-        transition='transform 0.4s ease'
-        _hover={{
-          transform: 'rotate(-10deg)',
+        whileHover={{
+          rotate: -10,
+        }}
+        transition={{
+          type: 'spring',
+          stiffness: 300,
+          damping: 30,
         }}
       />
-    </Box>
+    </MBox>
   );
 };

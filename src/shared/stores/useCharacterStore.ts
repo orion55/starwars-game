@@ -3,6 +3,8 @@ import { persist, PersistOptions } from 'zustand/middleware';
 import findIndex from 'lodash/findIndex';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
+import sortBy from 'lodash/sortBy';
+import filter from 'lodash/filter';
 
 export type Character = {
   id: string;
@@ -17,6 +19,7 @@ type CharactersState = {
   assignCharacters: (characters: Character[]) => void;
   setCharacter: (character: Character) => void;
   getCharacter: (id: string) => Character | undefined;
+  deleteCharacter: (id: string) => void;
 };
 
 type CharactersPersist = (
@@ -31,18 +34,22 @@ export const useCharactersStore = create<CharactersState, []>(
       assignCharacters: (characters) => set({ characters }),
       setCharacter: (character) => {
         const { characters } = get();
-        const updatedCharacters = cloneDeep(characters);
+        let updatedCharacters = cloneDeep(characters);
         const index = findIndex(updatedCharacters, { id: character.id });
-
-        if (index !== -1) {
+        if (~index) {
           updatedCharacters[index] = character;
         } else {
           updatedCharacters.push(character);
         }
-
+        updatedCharacters = sortBy(updatedCharacters, 'name');
         set({ characters: updatedCharacters });
       },
       getCharacter: (id) => find(get().characters, { id }),
+      deleteCharacter: (id) => {
+        const { characters } = get();
+        const updatedCharacters = filter(characters, (character) => character.id !== id);
+        set({ characters: updatedCharacters });
+      },
     }),
     {
       name: 'characters-store',

@@ -6,6 +6,9 @@ import { useNavigate } from 'react-router';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { CharacterBuilder } from '@/widgets/CharacterBuilder';
 import { Toaster } from '@/shared/ui/toaster.tsx';
+import { motion } from 'framer-motion';
+
+const MButton = motion.create(Button);
 
 export const Character = () => {
   const navigate = useNavigate();
@@ -25,25 +28,26 @@ export const Character = () => {
           flexDirection='column'
         >
           <Flex width='100%' justifyContent='flex-start' alignItems='center'>
-            <Button
+            <MButton
               size='md'
-              backgroundColor='yellow.500'
+              backgroundColor='#eab308'
               color='white'
-              transition='background-color 0.3s ease'
-              _hover={{
-                bg: 'yellow.400',
-                cursor: 'pointer',
-                transform: 'scale(1.05)',
-                transition: 'transform 0.4s ease',
+              whileHover={{
+                scale: 1.05,
+                backgroundColor: '#facc15',
+                transition: {
+                  scale: { duration: 0.3 },
+                  backgroundColor: { duration: 0.3 },
+                },
               }}
-              _active={{
-                transform: 'scale(1)',
+              whileTap={{
+                scale: 1,
               }}
               onClick={() => navigate(RoutePaths.Home)}
             >
               <MdOutlineArrowBackIos />
               Назад
-            </Button>
+            </MButton>
           </Flex>
           <Flex width='100%' justifyContent='center' alignItems='center' flex='1 0 auto'>
             <CharacterBuilder />

@@ -5,6 +5,10 @@ import { Button } from '@/shared/ui/button.tsx';
 import { useNavigate } from 'react-router';
 import { RoutePaths } from '@/app/routes.tsx';
 import { CharactersList } from '@/widgets/CharactersList';
+import { motion } from 'framer-motion';
+import { AlertDialog } from '@/entities/AlertDialog';
+
+const MButton = motion.create(Button);
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -52,28 +56,31 @@ export const HomePage = () => {
             </Text>
           </Box>
           <Box width='100%'>
-            <Button
+            <MButton
               size='xl'
-              backgroundColor='yellow.500'
+              backgroundColor='#eab308'
               color='white'
-              transition='transform 0.3s ease, background-color 0.3s ease'
-              _hover={{
-                bg: 'yellow.400',
-                cursor: 'pointer',
-                transform: 'scale(1.05)',
+              whileHover={{
+                scale: 1.05,
+                backgroundColor: '#facc15',
+                transition: {
+                  scale: { duration: 0.3 },
+                  backgroundColor: { duration: 0.3 },
+                },
               }}
-              _active={{
-                transform: 'scale(1)',
+              whileTap={{
+                scale: 1,
               }}
               onClick={() => navigate(RoutePaths.Character)}
               width='100%'
             >
               Создать персонажа
-            </Button>
+            </MButton>
           </Box>
         </Flex>
         <CharactersList />
       </Box>
+      <AlertDialog />
     </Theme>
   );
 };

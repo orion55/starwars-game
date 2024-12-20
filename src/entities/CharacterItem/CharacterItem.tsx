@@ -1,28 +1,120 @@
 import { Character } from '@/shared/stores/useCharacterStore.ts';
-import { Card } from '@chakra-ui/react';
+import { Box, Card, Text } from '@chakra-ui/react';
 import { Avatar } from '@/shared/ui/avatar.tsx';
 import { Button } from '@/shared/ui/button.tsx';
+import { DataListItem, DataListRoot } from '@/shared/ui/data-list.tsx';
+import { FiUser } from 'react-icons/fi';
+import { IoPlanetOutline } from 'react-icons/io5';
+import { PiAirplaneTiltLight } from 'react-icons/pi';
+import { motion } from 'framer-motion';
+import { useDialogStore } from '@/shared/stores/useDialogStore.ts';
 
 interface CharacterItemProps {
   character: Character;
 }
+const customDataListItem = {
+  '& > dt': {
+    minWidth: '80px',
+    color: 'white',
+  },
+};
+
+const MButton = motion.create(Button);
 
 export const CharacterItem = (props: CharacterItemProps) => {
   const { character } = props;
+  const { name, planet, starship, specie } = character;
+  const { openDialog } = useDialogStore();
+
+  const deleteClick = () => {
+    openDialog();
+  };
 
   return (
     <Card.Root width='320px' backgroundColor='rgba(10, 7, 34, 0.7)' border='1px solid yellow'>
       <Card.Body gap='2'>
-        <Avatar name={character.name} size='lg' shape='rounded' />
-        <Card.Title mt='2'>{character.name}</Card.Title>
-        <Card.Description>
-          This is the card body. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-          nec odio vel dui euismod fermentum. Curabitur nec odio vel dui euismod fermentum.
+        <Avatar name={name} size='lg' shape='rounded' />
+        <Card.Title mt='2'>{name}</Card.Title>
+        <Card.Description as='div'>
+          <DataListRoot orientation='horizontal' size='md' variant='bold'>
+            <DataListItem
+              label='Планета'
+              value={
+                <Box
+                  display='grid'
+                  alignItems='center'
+                  justifyContent='center'
+                  gridTemplateColumns='20px 1fr'
+                  gap={2}
+                >
+                  <IoPlanetOutline size={20} color='#FFD700' />
+                  <Text truncate>{planet}</Text>
+                </Box>
+              }
+              {...customDataListItem}
+            />
+            <DataListItem
+              label='Звездолёт'
+              value={
+                <Box
+                  display='grid'
+                  alignItems='center'
+                  justifyContent='center'
+                  gridTemplateColumns='20px 1fr'
+                  gap={2}
+                >
+                  <PiAirplaneTiltLight size={20} color='#FFD700' />
+                  <Text truncate>{starship}</Text>
+                </Box>
+              }
+              {...customDataListItem}
+            />
+            <DataListItem
+              label='Раса'
+              value={
+                <Box
+                  display='grid'
+                  alignItems='center'
+                  justifyContent='center'
+                  gridTemplateColumns='20px 1fr'
+                  gap={2}
+                >
+                  <FiUser size={20} color='#FFD700' />
+                  <Text truncate>{specie}</Text>
+                </Box>
+              }
+              {...customDataListItem}
+            />
+          </DataListRoot>
         </Card.Description>
       </Card.Body>
       <Card.Footer justifyContent='flex-end'>
-        <Button variant='outline'>Удалить</Button>
-        <Button>Править</Button>
+        <MButton
+          variant='outline'
+          backgroundColor='#000'
+          size='xs'
+          whileHover={{
+            backgroundColor: '#422006',
+            transition: {
+              backgroundColor: { duration: 0.4 },
+            },
+          }}
+          onClick={deleteClick}
+        >
+          Удалить
+        </MButton>
+        <MButton
+          size='xs'
+          backgroundColor='#eab308'
+          whileHover={{
+            backgroundColor: '#facc15',
+            transition: {
+              backgroundColor: { duration: 0.4 },
+            },
+          }}
+        >
+          Править
+        </MButton>
       </Card.Footer>
     </Card.Root>
   );
