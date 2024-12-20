@@ -21,6 +21,19 @@ import { toaster } from '@/shared/ui/toaster.tsx';
 import { RoutePaths } from '@/app/routes.tsx';
 import { useNavigate } from 'react-router';
 
+const customScrollbar = {
+  '&::-webkit-scrollbar': {
+    width: '4px',
+  },
+  '&::-webkit-scrollbar-track': {
+    background: 'gray.900',
+  },
+  '&::-webkit-scrollbar-thumb': {
+    background: 'yellow.500',
+    borderRadius: '2px',
+  },
+};
+
 export const CharacterBuilder = () => {
   const { setCharacter } = useCharactersStore();
   const { isLoading, isError, errorsData, planets, starships, species } = useStarWarsData();
@@ -76,7 +89,13 @@ export const CharacterBuilder = () => {
   if (isError) return <ErrorBox errors={errorsData as AxiosError[]} />;
 
   return (
-    <Box width='400px'>
+    <Box
+      width='400px'
+      backgroundColor='rgba(11, 11, 11, 0.4)'
+      border='1px solid yellow'
+      padding='20px'
+      rounded='lg'
+    >
       <form onSubmit={onSubmit}>
         <Stack gap='4' align='flex-start'>
           <Field
@@ -115,7 +134,7 @@ export const CharacterBuilder = () => {
                   <SelectTrigger clearable>
                     <SelectValueText placeholder='Выберите планету' />
                   </SelectTrigger>
-                  <SelectContent backgroundColor='gray.900'>
+                  <SelectContent backgroundColor='gray.900' {...customScrollbar}>
                     {planets.items.map((planet) => (
                       <SelectItem
                         item={planet}
@@ -156,7 +175,7 @@ export const CharacterBuilder = () => {
                   <SelectTrigger clearable>
                     <SelectValueText placeholder='Выберите звездолёт' />
                   </SelectTrigger>
-                  <SelectContent backgroundColor='gray.900'>
+                  <SelectContent backgroundColor='gray.900' {...customScrollbar}>
                     {starships.items.map((starship) => (
                       <SelectItem
                         item={starship}
@@ -197,7 +216,7 @@ export const CharacterBuilder = () => {
                   <SelectTrigger clearable>
                     <SelectValueText placeholder='Выберите расу' />
                   </SelectTrigger>
-                  <SelectContent backgroundColor='gray.900'>
+                  <SelectContent backgroundColor='gray.900' {...customScrollbar}>
                     {species.items.map((specie) => (
                       <SelectItem
                         item={specie}
