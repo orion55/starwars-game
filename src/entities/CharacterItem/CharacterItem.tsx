@@ -59,7 +59,14 @@ export const CharacterItem = (props: CharacterItemProps) => {
   };
 
   return (
-    <MBox width='320px' variants={cardVariants} initial='hidden' animate='visible' custom={index}>
+    <MBox
+      width='320px'
+      variants={cardVariants}
+      initial='hidden'
+      animate='visible'
+      custom={index}
+      exit='hidden'
+    >
       <Card.Root backgroundColor='rgba(10, 7, 34, 0.7)' border='1px solid yellow'>
         <Card.Body gap='2'>
           <Avatar name={name} size='lg' shape='rounded' />
