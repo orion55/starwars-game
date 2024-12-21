@@ -2,7 +2,7 @@ import { Box, Flex, Theme } from '@chakra-ui/react';
 import backgroundImage from './assets/img01.jpg';
 import { RoutePaths } from '@/app/routes.tsx';
 import { Button } from '@/shared/ui/button.tsx';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { CharacterBuilder } from '@/widgets/CharacterBuilder';
 import { Toaster } from '@/shared/ui/toaster.tsx';
@@ -12,6 +12,7 @@ const MButton = motion.create(Button);
 
 export const Character = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   return (
     <>
@@ -50,7 +51,7 @@ export const Character = () => {
             </MButton>
           </Flex>
           <Flex width='100%' justifyContent='center' alignItems='center' flex='1 0 auto'>
-            <CharacterBuilder />
+            <CharacterBuilder id={id} />
           </Flex>
         </Box>
       </Theme>

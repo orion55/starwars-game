@@ -11,11 +11,23 @@ import { Button } from '@/shared/ui/button.tsx';
 import { useDialogStore } from '@/shared/stores/useDialogStore.ts';
 import { Text } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+import { useCharactersStore } from '@/shared/stores/useCharacterStore.ts';
 
 const MButton = motion.create(Button);
 
 export const AlertDialog = () => {
   const { isOpen, closeDialog } = useDialogStore();
+  const { setCurrentCharacter, currentCharacter, deleteCurrentCharacter } = useCharactersStore();
+
+  const handleClose = () => {
+    setCurrentCharacter(null);
+    closeDialog();
+  };
+
+  const handleDelete = () => {
+    deleteCurrentCharacter();
+    closeDialog();
+  };
 
   return (
     <DialogRoot
@@ -27,20 +39,25 @@ export const AlertDialog = () => {
       lazyMount
       role='alertdialog'
     >
-      <DialogContent backgroundColor='gray.900' color='white'>
+      <DialogContent backgroundColor='#0A0722' color='white'>
         <DialogHeader>
-          <DialogTitle>Вы уверены?</DialogTitle>
+          <DialogTitle>Удалить персонажа</DialogTitle>
         </DialogHeader>
         <DialogBody>
-          <Text>
-            This action cannot be undone. This will permanently delete your account and remove your
-            data from our systems.
+          <Text color='white'>
+            Персонаж "
+            <Text fontWeight='bold' as='span'>
+              {currentCharacter?.name}
+            </Text>
+            " будет удалён безвозратно.
+            <br />
+            Вы уверены?
           </Text>
         </DialogBody>
         <DialogFooter>
           <MButton
             variant='outline'
-            backgroundColor='#18181b'
+            backgroundColor='#0A0722'
             size='xs'
             color='#fde047'
             border='#713f12 solid 1px'
@@ -52,16 +69,27 @@ export const AlertDialog = () => {
                 backgroundColor: { duration: 0.4 },
               },
             }}
-            onClick={closeDialog}
+            onClick={handleClose}
           >
             Отмена
           </MButton>
-          <Button colorPalette='red' size='xs'>
+          <MButton
+            colorPalette='red'
+            size='xs'
+            backgroundColor='#dc2626'
+            whileHover={{
+              backgroundColor: '#991919',
+              transition: {
+                backgroundColor: { duration: 0.4 },
+              },
+            }}
+            onClick={handleDelete}
+          >
             Удалить
-          </Button>
+          </MButton>
         </DialogFooter>
         <DialogCloseTrigger
-          onClick={closeDialog}
+          onClick={handleClose}
           color='#fde047'
           _hover={{ color: '#fff', bg: '#facc15' }}
         />

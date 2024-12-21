@@ -16,10 +16,12 @@ export type Character = {
 
 type CharactersState = {
   characters: Character[];
+  currentCharacter: Character | null;
   assignCharacters: (characters: Character[]) => void;
   setCharacter: (character: Character) => void;
+  setCurrentCharacter: (character: Character | null) => void;
   getCharacter: (id: string) => Character | undefined;
-  deleteCharacter: (id: string) => void;
+  deleteCurrentCharacter: () => void;
 };
 
 type CharactersPersist = (
@@ -31,6 +33,7 @@ export const useCharactersStore = create<CharactersState, []>(
   (persist as CharactersPersist)(
     (set, get) => ({
       characters: [],
+      currentCharacter: null,
       assignCharacters: (characters) => set({ characters }),
       setCharacter: (character) => {
         const { characters } = get();
@@ -44,11 +47,16 @@ export const useCharactersStore = create<CharactersState, []>(
         updatedCharacters = sortBy(updatedCharacters, 'name');
         set({ characters: updatedCharacters });
       },
+      setCurrentCharacter: (character) => set({ currentCharacter: character }),
       getCharacter: (id) => find(get().characters, { id }),
-      deleteCharacter: (id) => {
-        const { characters } = get();
-        const updatedCharacters = filter(characters, (character) => character.id !== id);
+      deleteCurrentCharacter: () => {
+        const { characters, currentCharacter, setCurrentCharacter } = get();
+        const updatedCharacters = filter(
+          characters,
+          (character) => character.id !== currentCharacter?.id,
+        );
         set({ characters: updatedCharacters });
+        setCurrentCharacter(null);
       },
     }),
     {

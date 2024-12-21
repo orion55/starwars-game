@@ -13,7 +13,7 @@ import {
 import { useStarWarsData } from '@/widgets/CharacterBuilder/hooks/useStarWarsData.ts';
 import { ErrorBox } from './ui/ErrorBox';
 import { AxiosError } from 'axios';
-import { formSchema, FormValues } from './model/schema.ts';
+import { formSchema, FormValues, INITIAL_DEFAULT_VALUES } from './model/schema.ts';
 import { Character, useCharactersStore } from '@/shared/stores/useCharacterStore.ts';
 import { v4 as uuidv4 } from 'uuid';
 import head from 'lodash/head';
@@ -21,6 +21,7 @@ import { toaster } from '@/shared/ui/toaster.tsx';
 import { RoutePaths } from '@/app/routes.tsx';
 import { useNavigate } from 'react-router';
 import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
 const customScrollbar = {
   '&::-webkit-scrollbar': {
@@ -37,10 +38,16 @@ const customScrollbar = {
 
 const MButton = motion.create(Button);
 
-export const CharacterBuilder = () => {
-  const { setCharacter } = useCharactersStore();
+interface CharacterBuilderProps {
+  id?: string;
+}
+
+export const CharacterBuilder = (props: CharacterBuilderProps) => {
+  const { id } = props;
+  const { setCharacter, getCharacter } = useCharactersStore();
   const { isLoading, isError, errorsData, planets, starships, species } = useStarWarsData();
   const navigate = useNavigate();
+  const isFirstRender = useRef(true);
 
   const {
     register,
@@ -50,19 +57,32 @@ export const CharacterBuilder = () => {
     reset,
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      planet: [],
-      starship: [],
-      specie: [],
-    },
+    defaultValues: INITIAL_DEFAULT_VALUES,
   });
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      let values = INITIAL_DEFAULT_VALUES;
+      if (id) {
+        const character = getCharacter(id);
+        if (character)
+          values = {
+            name: character.name,
+            planet: [character.planet],
+            starship: [character.starship],
+            specie: [character.specie],
+          };
+      }
+      reset(values);
+    }
+  }, [getCharacter, id, reset]);
 
   const onSubmit = handleSubmit((data) => {
     const { name, planet, starship, specie } = data;
 
     setCharacter({
-      id: uuidv4(),
+      id: id ? id : uuidv4(),
       name,
       planet: head(planet),
       starship: head(starship),
@@ -70,7 +90,7 @@ export const CharacterBuilder = () => {
     } as Character);
 
     toaster.create({
-      description: 'Персонаж успешно создан!',
+      description: `Персонаж успешно ${id ? 'изменён' : 'создан'}!`,
       type: 'success',
     });
 
@@ -254,7 +274,7 @@ export const CharacterBuilder = () => {
               scale: 1,
             }}
           >
-            Создать персонажа
+            {id ? 'Изменить' : 'Создать'} персонажа
           </MButton>
         </Stack>
       </form>
