@@ -17,7 +17,6 @@ export type Character = {
 type CharactersState = {
   characters: Character[];
   currentCharacter: Character | null;
-  assignCharacters: (characters: Character[]) => void;
   setCharacter: (character: Character) => void;
   setCurrentCharacter: (character: Character | null) => void;
   getCharacter: (id: string) => Character | undefined;
@@ -34,7 +33,6 @@ export const useCharactersStore = create<CharactersState, []>(
     (set, get) => ({
       characters: [],
       currentCharacter: null,
-      assignCharacters: (characters) => set({ characters }),
       setCharacter: (character) => {
         const { characters } = get();
         let updatedCharacters = cloneDeep(characters);

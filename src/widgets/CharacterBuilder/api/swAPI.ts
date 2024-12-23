@@ -27,13 +27,12 @@ const apiResponseSchema = z.object({
 
 type Item = z.infer<typeof itemSchema>;
 
-function getSortedItems(items: Item[]): string[] {
-  return sortBy(
+const getSortedItems = (items: Item[]): string[] =>
+  sortBy(
     map(items, 'name')
       .filter((name) => name.toLowerCase() !== 'unknown')
       .map(capitalize),
   );
-}
 
 async function fetchAllPages(endpoint: string): Promise<Item[]> {
   const { data: firstPageData } = await apiClient.get(endpoint);

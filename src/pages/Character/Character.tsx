@@ -1,5 +1,5 @@
 import { Box, Flex, Theme } from '@chakra-ui/react';
-import backgroundImage from './assets/img01.jpg';
+import backgroundImage from './assets/background.jpg';
 import { RoutePaths } from '@/app/routes.tsx';
 import { Button } from '@/shared/ui/button.tsx';
 import { useNavigate, useParams } from 'react-router';

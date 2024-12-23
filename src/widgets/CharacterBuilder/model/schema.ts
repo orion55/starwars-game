@@ -11,7 +11,7 @@ export const formSchema = z.object({
     .string()
     .array()
     .refine((arr) => arr.length > 0, {
-      message: 'Поле "Планета" обязателен для выбора',
+      message: 'Поле "Планета" обязателено для выбора',
     }),
   starship: z
     .string()

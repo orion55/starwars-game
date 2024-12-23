@@ -34,7 +34,7 @@ export const ErrorBox = (props: ErrorBoxProps) => {
             Метод: {error.config?.method?.toUpperCase() || 'N/A'}
           </Text>
           <Text fontSize='xs' color='gray.300' marginTop='4px'>
-            Код ошибки: {error.code || 'N/A'}
+            Код ошибки: {error?.code || 'N/A'}
           </Text>
         </Box>
       ))}

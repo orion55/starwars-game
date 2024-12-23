@@ -39,7 +39,7 @@ export const AlertDialog = () => {
       lazyMount
       role='alertdialog'
     >
-      <DialogContent backgroundColor='#0A0722' color='white'>
+      <DialogContent backgroundColor='#0A0722' color='white' border='1px solid yellow'>
         <DialogHeader>
           <DialogTitle>Удалить персонажа</DialogTitle>
         </DialogHeader>
