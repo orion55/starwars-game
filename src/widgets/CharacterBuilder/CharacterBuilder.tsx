@@ -113,7 +113,7 @@ export const CharacterBuilder = (props: CharacterBuilderProps) => {
 
   return (
     <Box
-      width='400px'
+      width={['100%', '100%', '400px', '400px']}
       backgroundColor='rgba(11, 11, 11, 0.4)'
       border='1px solid yellow'
       padding='20px'

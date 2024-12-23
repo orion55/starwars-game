@@ -25,7 +25,7 @@ export const Logo = () => {
         src={logo}
         alt='logo'
         height='137px'
-        width='320px'
+        width={['100%', '100%', '320px', '320px']}
         whileHover={{
           rotate: -10,
         }}

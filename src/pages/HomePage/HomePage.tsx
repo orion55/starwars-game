@@ -31,7 +31,7 @@ export const HomePage = () => {
           alignItems='center'
           flexDirection='column'
           gap={4}
-          width='600px'
+          width={['100%', '100%', '600px', '600px']}
           margin='0 auto'
         >
           <Logo />
@@ -50,9 +50,8 @@ export const HomePage = () => {
               fontWeight='bold'
               textShadow='lg'
             >
-              Погрузитесь в захватывающий мир Star Wars.
-              <br /> Создайте своего уникального персонажа и отправляйтесь в эпическое путешествие
-              по галактике!
+              Погрузитесь в захватывающий мир Star Wars. Создайте своего уникального персонажа и
+              отправляйтесь в эпическое путешествие по галактике!
             </Text>
           </Box>
           <Box width='100%'>
